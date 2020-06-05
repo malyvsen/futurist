@@ -1,8 +1,24 @@
 addons:
   ssh_known_hosts: $IP_ADDR
 
-deploy:
-  provider: script
-  script: bash assets/deploy.sh
-  on:
-    branch: master
+jobs:
+  include:
+    - stage: test
+    - language: python
+      python: 3.7
+      before_script:
+        - cd backend
+      script:
+        - python -m unittest discover
+
+    - language: nodejs
+      nodejs:
+        - node
+      before_script:
+        - cd frontend
+    - stage: deploy
+    - deploy:
+      provider: script
+      script: bash assets/deploy.sh
+      on:
+        branch: master

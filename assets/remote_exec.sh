@@ -1,5 +1,6 @@
 #!/bin/sh
-mkdir ~/.ssh
+
+mkdir -p ~/.ssh
 echo $SSH_KEY > ~/.ssh/id_rsa.pub
 chmod 700 ~/.ssh
 chmod 600 ~/.ssh/id_rsa.pub

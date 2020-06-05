@@ -3,6 +3,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { useQuery } from "react-query";
 import { useDropzone } from "react-dropzone";
+import { useState } from "react";
 
 function App() {
   const { status, data, error } = useQuery("users", async function () {
@@ -10,6 +11,17 @@ function App() {
   });
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+  const [stuff, setStuff] = useState({});
+
+  const sendFile = (file) => {
+    let data = new FormData();
+    data.append("data_file", file);
+
+    fetch("/upload", { body: data })
+      .then((res) => res.json())
+      .then((json) => setStuff(json));
+  };
 
   const files = acceptedFiles.map((file) => (
     <li key={file.path}>
@@ -23,6 +35,7 @@ function App() {
         <code>{JSON.stringify(status, null, 2)}</code>
         <code>{JSON.stringify(error, null, 2)}</code>
         <code>{JSON.stringify(data, null, 2)}</code>
+        <code>{JSON.stringify(stuff, null, 2)}</code>
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -45,6 +58,8 @@ function App() {
           <h4>Files</h4>
           <ul>{files}</ul>
         </aside>
+
+        <button onClick={() => sendFile(acceptedFiles[0])}>send</button>
       </section>
     </div>
   );

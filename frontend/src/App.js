@@ -2,11 +2,20 @@ import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { useQuery } from "react-query";
+import { useDropzone } from "react-dropzone";
 
 function App() {
   const { status, data, error } = useQuery("users", async function () {
     return await (await fetch("/users", { method: "POST" })).json();
   });
+
+  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
+  const files = acceptedFiles.map((file) => (
+    <li key={file.path}>
+      {file.path} - {file.size} bytes
+    </li>
+  ));
 
   return (
     <div className="App">
@@ -27,6 +36,16 @@ function App() {
           Learn React
         </a>
       </header>
+      <section className="container">
+        <div {...getRootProps({ className: "dropzone" })}>
+          <input {...getInputProps()} />
+          <p>Drag 'n' drop some files here, or click to select files</p>
+        </div>
+        <aside>
+          <h4>Files</h4>
+          <ul>{files}</ul>
+        </aside>
+      </section>
     </div>
   );
 }

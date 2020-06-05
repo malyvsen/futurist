@@ -1,7 +1,7 @@
 jobs:
   include:
     - stage: test
-    - language: python
+      language: python
       python: 3.7
       before_script:
         - cd backend
@@ -14,7 +14,7 @@ jobs:
         - cd frontend
     - stage: deploy
       if: branch = master
-    - addons:
+      addons:
       ssh_known_hosts: $IP_ADDR
     - deploy:
       provider: script

@@ -10,4 +10,4 @@ cd ../backend;
 source venv/bin/activate;
 pip3 install -r requirements.txt;
 
-systemctl restart futurist-flask;
+systemctl restart futurist-flask && echo "komputer pokładowy informuje: jednostka systemowa zrestartowana"

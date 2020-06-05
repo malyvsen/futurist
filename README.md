@@ -1,0 +1,2 @@
+# futurist
+Democratizing forecasting.

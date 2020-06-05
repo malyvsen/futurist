@@ -11,6 +11,7 @@ def plot(name, prediction):
         yaxis_title=f'{name}'
     )).add_trace(go.Scatter(
         name='Upper bound',
+        showlegend=False,
         mode='lines',
         line=dict(width=0),
         fill='tonexty',
@@ -27,6 +28,7 @@ def plot(name, prediction):
         y=prediction.value
     )).add_trace(go.Scatter(
         name='Lower bound',
+        showlegend=False,
         mode='lines',
         line=dict(width=0),
         x=prediction.date,

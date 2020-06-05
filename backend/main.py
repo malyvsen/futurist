@@ -1,11 +1,17 @@
-from flask import Flask, render_template
-from flask.json import jsonify
+from flask import Flask, render_template, request
+from prediction import parse, predict, plot
 
-app = Flask(__name__, static_folder="../frontend/build/static", template_folder="../frontend/build")
 
-@app.route("/users", methods=["POST"])
-def users():
-    return jsonify([{ "name": "hello", "id": 1}])
+
+app = Flask(__name__, static_folder='../frontend/build/static', template_folder='../frontend/build')
+
+@app.route('/upload', methods=['POST'])
+def handle_file():
+    file = request.files['data_file']
+    data = parse(file.filename, file)
+    prediction = predict(data)
+    for series_name in prediction:
+        return plot(series_name, prediction) # TODO: actually return multiple plots :
 
 @app.route("/")
 def hello():

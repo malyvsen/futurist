@@ -10,7 +10,7 @@ jobs:
     - language: nodejs
       node_js:
         - node
-      before_script:
+      before_install:
         - cd frontend
       install:
         - yarn

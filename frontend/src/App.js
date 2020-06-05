@@ -30,7 +30,7 @@ function App() {
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
-          <p>Drag 'n' drop some files here, or click to select files</p>
+          <p>Drag 'n' drop some files here, or click to select</p>
         </div>
         <aside>
           <h4>Files</h4>

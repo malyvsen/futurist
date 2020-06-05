@@ -1,3 +1,4 @@
 #!/bin/sh
 echo $SSH_KEY > /tmp/ssh_key
+ssh-keyscan -H $IP_ADDR >> ~/.ssh/known_hosts
 ssh -i /tmp/ssh_key $DEPLOY_USER@$IP_ADDR 'bash -s' < ./deploy.sh

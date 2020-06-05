@@ -1,4 +1,6 @@
-language: minimal
+os: linux
+dist: xenial
+language: shell
 
 jobs:
   include:
@@ -9,7 +11,7 @@ jobs:
         - cd backend
       script:
         - python -m unittest discover
-    - language: nodejs
+    - language: node_js
       node_js:
         - node
       before_install:
@@ -18,10 +20,7 @@ jobs:
         - yarn
     - stage: deploy
       if: branch = master
-      addons:
-      ssh_known_hosts: $IP_ADDR
       deploy:
-      provider: script
       script: bash remote_exec.sh
       before_script:
         - cd assets

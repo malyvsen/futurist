@@ -1,15 +1,10 @@
 import React from "react";
-import logo from "./logo.svg";
 import "./App.css";
-import { useQuery } from "react-query";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
+import Plot from "react-plotly.js";
 
 function App() {
-  const { status, data, error } = useQuery("users", async function () {
-    return await (await fetch("/users", { method: "POST" })).json();
-  });
-
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
   const [stuff, setStuff] = useState({});
@@ -31,24 +26,7 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
-        <code>{JSON.stringify(status, null, 2)}</code>
-        <code>{JSON.stringify(error, null, 2)}</code>
-        <code>{JSON.stringify(data, null, 2)}</code>
-        <code>{JSON.stringify(stuff, null, 2)}</code>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Plot data={stuff.data} layout={stuff.layout} />
       <section className="container">
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />

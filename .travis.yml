@@ -1,6 +1,3 @@
-addons:
-  ssh_known_hosts: $IP_ADDR
-
 jobs:
   include:
     - stage: test
@@ -10,15 +7,15 @@ jobs:
         - cd backend
       script:
         - python -m unittest discover
-
     - language: nodejs
       nodejs:
         - node
       before_script:
         - cd frontend
     - stage: deploy
+      if: branch = master
+    - addons:
+      ssh_known_hosts: $IP_ADDR
     - deploy:
       provider: script
       script: bash assets/deploy.sh
-      on:
-        branch: master

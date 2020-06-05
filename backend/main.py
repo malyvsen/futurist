@@ -11,7 +11,7 @@ def handle_file():
     data = parse(file.filename, file)
     prediction = predict(data)
     for series_name in prediction:
-        return plot(series_name, prediction) # TODO: actually return multiple plots :
+        return plot(series_name, prediction[series_name]) # TODO: actually return multiple plots :)
 
 @app.route("/")
 def hello():

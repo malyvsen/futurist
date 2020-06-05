@@ -7,10 +7,11 @@ jobs:
     - stage: test
       language: python
       python: 3.7
-      before_script:
+      before_install:
         - cd backend
       script:
-        - python -m unittest discover
+        - pip install pytest
+        - python -m pytest
     - language: node_js
       cache:
         directories:

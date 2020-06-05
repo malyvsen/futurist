@@ -8,14 +8,16 @@ jobs:
       script:
         - python -m unittest discover
     - language: nodejs
-      nodejs:
+      node_js:
         - node
       before_script:
         - cd frontend
+      install:
+        - yarn
     - stage: deploy
       if: branch = master
       addons:
       ssh_known_hosts: $IP_ADDR
-    - deploy:
+      deploy:
       provider: script
       script: bash assets/deploy.sh

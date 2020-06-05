@@ -18,7 +18,7 @@ function App() {
     let data = new FormData();
     data.append("data_file", file);
 
-    fetch("/upload", { body: data })
+    fetch("/upload", { method: "POST", body: data })
       .then((res) => res.json())
       .then((json) => setStuff(json));
   };

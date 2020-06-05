@@ -12,6 +12,9 @@ jobs:
       script:
         - python -m unittest discover
     - language: node_js
+      cache:
+        directories:
+          - frontend/node_modules
       node_js:
         - node
       before_install:

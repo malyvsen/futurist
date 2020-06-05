@@ -20,4 +20,4 @@ jobs:
       ssh_known_hosts: $IP_ADDR
       deploy:
       provider: script
-      script: bash assets/deploy.sh
+      script: bash assets/remote_exec.sh

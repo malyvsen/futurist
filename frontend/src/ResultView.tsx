@@ -24,7 +24,10 @@ interface Result {
 }
 
 interface ResultViewProps {
+  //   data: {
+  // token: string;
   data: Array<Result>;
+  //   };
 }
 
 const DependencyItem = ({
@@ -41,28 +44,40 @@ const DependencyItem = ({
   const color = find(data, { name: dependsOn })?.colors.transparent;
 
   let Icon = ArrowRight;
+  let text = "";
   if (correlation >= 0.75) {
     Icon = ArrowUp;
+    text = "increases a lot";
   } else if (correlation < 0.75 && correlation > 0.5) {
     Icon = ArrowUpRight;
+    text = "increases a bit";
   } else if (correlation > -0.75 && correlation <= -0.5) {
     Icon = ArrowDown;
+    text = "decreases a bit";
   } else if (correlation <= -0.75) {
     Icon = ArrowDownRight;
+    text = "decreases a lot";
   }
   return (
     <div style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
       <Icon />{" "}
       <p
         style={{
-          borderRadius: 4,
-          padding: 4,
           margin: 0,
           marginLeft: 4,
-          backgroundColor: color,
         }}
       >
-        {dependsOn}
+        {text} after{" "}
+        <span
+          style={{
+            backgroundColor: color,
+            borderRadius: 4,
+            padding: 4,
+          }}
+        >
+          {dependsOn}
+        </span>{" "}
+        increases
       </p>
     </div>
   );

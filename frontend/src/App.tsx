@@ -1,15 +1,21 @@
 import React from "react";
+
 import "./App.css";
+
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
-import Plot from "react-plotly.js";
+
+import createPlotlyComponent from "react-plotly.js/factory";
+
+const Plotly = require("plotly.js-basic-dist");
+const Plot = createPlotlyComponent(Plotly);
 
 function App() {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
-  const [stuff, setStuff] = useState({});
+  const [stuff, setStuff] = useState<any>({});
 
-  const sendFile = (file) => {
+  const sendFile = (file: File) => {
     let data = new FormData();
     data.append("data_file", file);
 
@@ -19,8 +25,8 @@ function App() {
   };
 
   const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
+    <li key={file.name}>
+      {file.name} - {file.size} bytes
     </li>
   ));
 

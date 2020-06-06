@@ -1,4 +1,5 @@
 import json
+import numpy as np
 import plotly.graph_objects as go
 import plotly.io
 
@@ -11,6 +12,7 @@ def plot(predictions, colors):
 
 def plot_single(name, colors, prediction):
     '''Return a Figure dict, ready to be put into Plotly after JSONification'''
+    nanless_prediction = prediction[~np.isnan(prediction.value)]
     figure = go.Figure(layout=dict(
         xaxis_title='Date',
         yaxis_title=f'{name}',
@@ -23,8 +25,8 @@ def plot_single(name, colors, prediction):
             color=colors['transparent'],
             width=0
         ),
-        x=prediction.index,
-        y=prediction.lower
+        x=nanless_prediction.index,
+        y=nanless_prediction.lower
     )).add_trace(go.Scatter(
         name='Upper bound',
         mode='lines',
@@ -34,14 +36,14 @@ def plot_single(name, colors, prediction):
         ),
         fill='tonexty',
         fillcolor=colors['transparent'],
-        x=prediction.index,
-        y=prediction.upper
+        x=nanless_prediction.index,
+        y=nanless_prediction.upper
     )).add_trace(go.Scatter(
         name='Value',
         mode='lines',
         line=dict(color=colors['opaque']),
-        x=prediction.index,
-        y=prediction.value
+        x=nanless_prediction.index,
+        y=nanless_prediction.value
     ))
     figure_json = plotly.io.to_json(figure)
     return json.loads(figure_json)

@@ -7,7 +7,8 @@ from fbprophet import Prophet
 def predict(data, num_periods=None):
     '''Return a dict like {variable_name: past_and_future_dataframe}'''
     if num_periods is None:
-        num_periods = int(np.clip(len(data) * 0.25, 4, 256))
+        data_days = (data.index[-1] - data.index[0]).days
+        num_periods = int(np.clip(data_days * 0.25, 4, 256))
     result = {}
     for variable in data.columns:
         past = data[variable]

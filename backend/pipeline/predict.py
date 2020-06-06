@@ -4,8 +4,9 @@ from fbprophet import Prophet
 
 
 
-def predict(data, num_periods=365):
+def predict(data):
     '''Return a dict like {variable_name: past_and_future_dataframe}'''
+    num_periods = np.clip(len(data) * 0.25, 4, 256)
     result = {}
     for variable in data.columns:
         past = data[variable]

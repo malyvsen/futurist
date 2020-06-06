@@ -1,14 +1,14 @@
 import numpy as np
 import pandas as pd
-from prediction import predict
+from pipeline.predict import predict
 
 
 
 def test_single():
     past = pd.DataFrame.from_dict({
-        'Datezzz': pd.Series(['2020-06-01', '2020-06-02', '2020-06-03', '2020-06-04'], dtype='datetime64[ns]'),
+        'date': pd.Series(['2020-06-01', '2020-06-02', '2020-06-03', '2020-06-04'], dtype='datetime64[ns]'),
         'Moneyz': [0, 1, 2.5, 3.25]
-    })
+    }).set_index('date')
     predictions = predict(past, num_periods=4)['Moneyz']
     print(predictions)
     assert len(predictions) == 8

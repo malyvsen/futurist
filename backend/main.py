@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from prediction import parse, predict, plot
+import pipeline
 
 
 
@@ -8,10 +8,7 @@ app = Flask(__name__, static_folder='../frontend/build/static', template_folder=
 @app.route('/upload', methods=['POST'])
 def handle_file():
     file = request.files['data_file']
-    data = parse(file.filename, file)
-    prediction = predict(data)
-    for series_name in prediction:
-        return plot(series_name, prediction[series_name]) # TODO: actually return multiple plots :)
+    return pipeline.process(file)
 
 @app.route("/")
 def hello():

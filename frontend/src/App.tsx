@@ -1,19 +1,13 @@
 import React from "react";
 
 import { LoadingActivity } from "./LoadingActivity";
-import { FileText, UploadCloud } from "react-feather";
-
+import { Sunrise, FileText, UploadCloud, Trash } from "react-feather";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
-
 import { useMachine } from "@xstate/react";
 import { Machine } from "xstate";
-
-import createPlotlyComponent from "react-plotly.js/factory";
 import { theme } from "./theme";
-
-const Plotly = require("plotly.js-basic-dist");
-const Plot = createPlotlyComponent(Plotly);
+import { ResultView } from "./ResultView";
 
 const uploadMachine = Machine({
   id: "upload",
@@ -23,7 +17,7 @@ const uploadMachine = Machine({
       on: { SELECT: "ready" },
     },
     ready: {
-      on: { UPLOAD: "uploading" },
+      on: { UPLOAD: "uploading", RETRY: "inactive" },
     },
     uploading: {
       on: { SUCCESS: "display", ERROR: "error" },
@@ -78,7 +72,7 @@ function App() {
         minHeight: "100vh",
       }}
     >
-      {state.value === "display" && <Plot data={data.data} layout={data.layout} />}
+      {state.value === "display" && <ResultView data={data} />}
       {state.value === "inactive" && (
         <div
           style={{
@@ -111,7 +105,23 @@ function App() {
 
       {state.value === "uploading" && <LoadingActivity pulseColor={theme.primary} />}
       {state.value === "ready" && (
-        <button onClick={() => sendFile(acceptedFiles[0])}>let's forecast</button>
+        <div style={{ display: "flex" }}>
+          <button
+            style={{ marginRight: 16, display: "flex", alignItems: "center" }}
+            className="button button-outline"
+            onClick={() => send("RETRY")}
+          >
+            <Trash style={{ marginRight: 8 }} />
+            wrong file?
+          </button>
+          <button
+            style={{ display: "flex", alignItems: "center" }}
+            onClick={() => sendFile(acceptedFiles[0])}
+          >
+            <Sunrise style={{ marginRight: 8 }} />
+            let's forecast
+          </button>
+        </div>
       )}
       {state.value === "display" && (
         <button onClick={() => send("RETRY")}>send another file?</button>

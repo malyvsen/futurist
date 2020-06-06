@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import { animated, useSpring } from "react-spring";
 
 const LoadingActivity = ({ pulseColor }: { pulseColor: string }) => {

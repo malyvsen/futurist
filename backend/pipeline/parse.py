@@ -3,8 +3,10 @@ import pandas as pd
 
 
 
-def parse(filename, file):
+def parse(filename, file=None):
     '''Return a DataFrame like {variable_name_1: ..., variable_name_2: ...}, indexed by date'''
+    if file is None:
+        file = filename # Pandas will detect this
     parsed_file = pd.read_excel(file) # TODO: use filename to determine extension -> encoding
     date_df = parsed_file.select_dtypes(np.datetime64)
     dates = date_df[date_df.columns[0]] # TODO: some warning when there are multiple date columns

@@ -10,7 +10,10 @@ const App = () => {
       <header
         style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", padding: 16 }}
       >
-        <Link href="/forecast" style={{ marginRight: "auto" }}>
+        <Link href="/" className="button button-clear" style={{ marginRight: 8 }}>
+          About
+        </Link>
+        <Link href="/forecast" className="button button-clear" style={{ marginRight: "auto" }}>
           Forecast
         </Link>
         <h3 style={{ margin: 0 }}>Futurist</h3>

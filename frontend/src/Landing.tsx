@@ -15,20 +15,20 @@ const Landing = () => {
           padding: 64,
         }}
       >
-        <img
-          style={{ maxHeight: 350 }}
-          src={gather}
-          alt="Data coming from all directions to a computer"
-        />
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <h1>Gather info from different sources</h1>
+          <h1>Ask questions and get answers</h1>
           <p>
-            You already have the data, even if you don't know it. There is much more to your sales
-            results than just amounts of flip-flops sold, but you need to see the numbers in right
-            context. Futurist can help with that - guiding through Facebook's interface to get
-            social media interactions and providing visualizations of publicly accessible data.
+            Will increasing the advertising budget impact sales?
+            How many capuccinos can I expect to sell this Christmas?
+            How will the upcoming increase in gasoline prices affect my profits?
+            Futurist will answer these quetsions, and many more, for you.
           </p>
         </div>
+        <img
+          style={{ maxHeight: 350 }}
+          src={analyze}
+          alt="Data coming from all directions to a computer"
+        />
       </section>
       <section
         style={{
@@ -39,19 +39,20 @@ const Landing = () => {
           padding: 64,
         }}
       >
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
-          <h1>Ask questions and listen to answers</h1>
-          <p>
-            After a quick processing, all of your data will be presented on graphs. But the key to
-            Futurist is actually in insights and questions. The one you can ask yourself - will be
-            increasing sales budget impact sales?
-          </p>
-        </div>
         <img
           style={{ maxHeight: 350 }}
-          src={analyze}
+          src={gather}
           alt="Data coming from all directions to a computer"
         />
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "center" }}>
+          <h1>Gather data from many sources</h1>
+          <p>
+            There is much more to your profits than just how many flip-flops you sold - all you need
+            is to see your data in the right context. Futurist can help here - we'll help you use
+            data from the Central Statistical Office or your Facebook page, and we'll extract the relevant
+            bits for you.
+          </p>
+        </div>
       </section>
       <section
         style={{
@@ -63,7 +64,7 @@ const Landing = () => {
           justifyContent: "center",
         }}
       >
-        <h1>I've heard enough</h1>
+        <h2>What are we waiting for?</h2>
         <Link href="/forecast" className="button">
           Take me to the Futurist!
         </Link>

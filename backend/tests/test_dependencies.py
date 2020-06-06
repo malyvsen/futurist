@@ -10,8 +10,9 @@ def test_increasing():
         'income': [100, 200, 300]
     }).set_index('date')
     dependency_dict = dependencies(data)
-    assert dependency_dict['income']['price'] > 0
-    assert dependency_dict['price']['income'] > 0
+    assert len(dependency_dict['income']) == 1
+    assert dependency_dict['income'][0]['name'] == 'price'
+    assert dependency_dict['income'][0]['correlation'] > 0
 
 
 def test_decreasing():
@@ -21,5 +22,6 @@ def test_decreasing():
         'income': [100, 50, 0]
     }).set_index('date')
     dependency_dict = dependencies(data)
-    assert dependency_dict['income']['price'] < 0
-    assert dependency_dict['price']['income'] < 0
+    assert len(dependency_dict['income']) == 1
+    assert dependency_dict['income'][0]['name'] == 'price'
+    assert dependency_dict['income'][0]['correlation'] < 0

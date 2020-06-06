@@ -4,15 +4,24 @@ import numpy.ma as ma
 
 
 def dependencies(data):
-    '''Returns dict like {afftected_variable: {affecting_variable: correlation}}'''
+    '''Returns dict like {afftected_variable: [{name: affecting_variable, correlation: 0.7}, ...]}'''
     period = int(np.clip(len(data) * 0.25, 1, 32))
     moving_averages = data.rolling(window=period).mean()
-    return {
-        affected: {
-            affecting: correlation(moving_averages[affecting], data[affected])
-            for affecting in moving_averages.columns
-        }
+    unfiltered = {
+        affected: [{
+                'name': affecting,
+                'correlation': correlation(moving_averages[affecting], data[affected])
+            }
+            for affecting in moving_averages.columns if affecting != affected
+        ]
         for affected in data.columns
+    }
+    significance_threshold = 0.25 + 0.25 * (len(data) ** -0.1) # absolutely made up
+    return {
+        affected: [
+            entry for entry in unfiltered[affected] if np.abs(entry['correlation']) > significance_threshold
+        ]
+        for affected in unfiltered
     }
 
 

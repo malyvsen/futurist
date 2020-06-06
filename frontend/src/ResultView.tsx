@@ -70,7 +70,10 @@ const DependencyItem = ({
 
 const ResultView = ({ data }: ResultViewProps) => {
   const elements = data.map((result, index) => (
-    <div key={result.name}>
+    <div
+      key={result.name}
+      style={{ marginBottom: 64, borderBottom: "1px solid rgba(0, 0, 0, 0.3)" }}
+    >
       <h2>
         <span
           style={{
@@ -84,10 +87,10 @@ const ResultView = ({ data }: ResultViewProps) => {
         </span>
       </h2>
       {index === 0 && (
-        <Fragment>
+        <blockquote>
           <p>This plot lets you see into the future!</p>
           <p>Where the dates extend beyond today, the shaded area indicates uncertainty.</p>
-        </Fragment>
+        </blockquote>
       )}
       <Plot {...result.plot} />
       <h3>Dependencies:</h3>

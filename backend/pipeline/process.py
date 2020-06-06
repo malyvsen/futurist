@@ -11,4 +11,4 @@ def process(uploaded_file):
     color_mapping = colors(data.columns)
     predictions = predict(data)
     plots = plot(predictions, color_mapping)
-    return {{colors: color_mapping[variable],  plot: plots[variable]} for variable in data.columns}
+    return {variable: {'colors': color_mapping[variable],  'plot': plots[variable]} for variable in data.columns}

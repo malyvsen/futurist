@@ -4,17 +4,18 @@ def colors(variables):
 
 
 def sample_palette(idx):
-    opaque = palette[idx % len(palette)]
+    rgb = palette[idx % len(palette)]
+    rgba = (*[v for v in rgb], 0.5)
     return dict(
-        opaque=opaque,
-        transparent=opaque + '7F'
+        opaque=f'rgb{rgb}',
+        transparent=f'rgba{rgba}'
     )
 
 
 palette = [
-    'D6F6DD', # nyanza
-    'DAC4F7', # lavender blue
-    'F4989C', # salmon pink
-    'EBD2B4', # light orange
-    'ACECF7', # blizzard blue
+    (214, 246, 221), # nyanza
+    (218, 196, 247), # lavender blue
+    (244, 152, 156), # salmon pink
+    (235, 210, 180), # light orange
+    (172, 236, 247), # blizzard blue
 ]

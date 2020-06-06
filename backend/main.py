@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from flask import jsonify
 import pipeline
 
 
@@ -8,7 +9,7 @@ app = Flask(__name__, static_folder='../frontend/build/static', template_folder=
 @app.route('/upload', methods=['POST'])
 def handle_file():
     file = request.files['data_file']
-    return pipeline.process(file)
+    return jsonify(pipeline.process(file))
 
 @app.route("/")
 def hello():

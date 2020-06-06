@@ -13,11 +13,11 @@ def process(uploaded_file):
     dependency_dict = dependencies(data)
     prediction_dict = predict(data)
     plot_dict = plot(prediction_dict, color_dict)
-    return {
-        variable: {
+    return [{
+            'name': variable,
             'colors': color_dict[variable],
             'dependencies': dependency_dict[variable],
             'plot': plot_dict[variable]
         }
         for variable in data.columns
-    }
+    ]

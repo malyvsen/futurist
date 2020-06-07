@@ -1,1 +1,1 @@
-from .process import process
+from .process import process_upload, process_question

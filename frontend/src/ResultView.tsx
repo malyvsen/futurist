@@ -48,14 +48,14 @@ const DependencyItem = ({
   if (correlation >= 0.75) {
     Icon = ArrowUp;
     text = "increases a lot";
-  } else if (correlation < 0.75 && correlation > 0.5) {
+  } else if (correlation < 0.75 && correlation > 0) {
     Icon = ArrowUpRight;
     text = "increases a bit";
-  } else if (correlation > -0.75 && correlation <= -0.5) {
-    Icon = ArrowDown;
+  } else if (correlation > -0.75 && correlation < 0) {
+    Icon = ArrowDownRight;
     text = "decreases a bit";
   } else if (correlation <= -0.75) {
-    Icon = ArrowDownRight;
+    Icon = ArrowDown;
     text = "decreases a lot";
   }
   return (

@@ -5,11 +5,12 @@ from .colors import colors
 from .dependencies import dependencies
 from .predict import predict
 from .plot import plot
+from .hypothetical import hypothetical
 
 
 
-def process(uploaded_file, facebook_file=None):
-    '''Return dict like {variable_name: {colors: ..., plot: ...}}'''
+def process_upload(uploaded_file, facebook_file=None):
+    '''Use everything else in this module to process an uploaded file'''
     uploaded_data = parse(uploaded_file.filename, uploaded_file)
     provided_data = [uploaded_data]
     source_dict = {variable: 'user' for variable in uploaded_data.columns}
@@ -23,12 +24,38 @@ def process(uploaded_file, facebook_file=None):
     dependency_dict = dependencies(data)
     prediction_dict = predict(data)
     plot_dict = plot(prediction_dict, color_dict)
-    return [{
+    return {
+        'last_known_date': data.index.max(),
+        'variable_data': [{
             'name': variable,
             'source': source_dict[variable] if variable in source_dict else 'gus',
             'colors': color_dict[variable],
             'dependencies': dependency_dict[variable],
+            'prediction': prediction_dict[variable],
             'plot': plot_dict[variable]
-        }
-        for variable in data.columns
-    ]
+            }
+            for variable in data.columns
+        ]
+    }
+
+
+def process_question(variable, date, value, stored_data):
+    '''Returns what would happen to the output of process_upload if `variable` were to achieve `value` at `date`'''
+    prediction_dict = {variable: stored_data['variable_data'][variable]['predictions'] for variable in stored_data['variable_data']}
+    color_dict = {variable: stored_data['variable_data'][variable]['colors'] for variable in stored_data['variable_data']}
+    last_known_date = stored_data['last_known_date']
+    new_predictions = hypothetical(set_variable=variable, set_date=date, set_value=value, last_known_date=last_known_date, predictions=prediction_dict)
+    new_plots = plot(new_predictions, color_dict)
+    return {
+        'last_known_date': last_known_date,
+        'variable_data': [{
+            'name': variable,
+            'source': stored_data['variable_data'][variable]['source'],
+            'colors': stored_data['variable_data'][variable]['colors'],
+            'dependencies': stored_data['variable_data'][variable]['dependencies'],
+            'prediction': new_predictions[variable],
+            'plot': new_plots[variable]
+            }
+            for variable in stored_data['variable_data']
+        ]
+    }

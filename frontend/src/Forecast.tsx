@@ -95,19 +95,27 @@ const Forecast = () => {
     >
       {state.value === "display" && <ResultView data={data} />}
       {state.value === "inactive" && (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-          {...getRootProps({ className: "dropzone" })}
-        >
-          <UploadCloud style={{ margin: 16 }} size={48} />
-          <input {...getInputProps()} />
-          <p>Drag 'n' drop your Excel file here (or click to browse)</p>
-        </div>
+        <Fragment>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+            {...getRootProps({ className: "dropzone" })}
+          >
+            <UploadCloud style={{ margin: 16 }} size={48} />
+            <input {...getInputProps()} />
+            <p>Drag 'n' drop your Excel file here (or click to browse)</p>
+          </div>
+          <p style={{ fontSize: "0.8em", marginTop: 64 }}>
+            Psst! If you're just checking Futurist out then you can use{" "}
+            <a href="https://github.com/malyvsen/futurist/tree/master/examples">
+              example data from our GitHub repository.
+            </a>
+          </p>
+        </Fragment>
       )}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", marginBottom: 32 }}>
         <div

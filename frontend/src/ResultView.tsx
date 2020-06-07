@@ -1,5 +1,15 @@
-import React, { Fragment } from "react";
-import { ArrowUp, ArrowUpRight, ArrowDown, ArrowDownRight, ArrowRight, Tag } from "react-feather";
+import { Modal, useModal, ModalTransition } from "react-simple-hook-modal";
+import React, { Fragment, useState } from "react";
+import {
+  ArrowUp,
+  ArrowUpRight,
+  ArrowDown,
+  ArrowDownRight,
+  ArrowRight,
+  Tag,
+  Info,
+  X,
+} from "react-feather";
 
 import createPlotlyComponent from "react-plotly.js/factory";
 import { PlotParams } from "react-plotly.js";
@@ -25,10 +35,8 @@ interface Result {
 }
 
 interface ResultViewProps {
-  //   data: {
-  // token: string;
   data: Array<Result>;
-  //   };
+  whatIf: (payload: { variable: string; date: string; value: string }) => Promise<void>;
 }
 
 const DependencyItem = ({
@@ -84,8 +92,22 @@ const DependencyItem = ({
   );
 };
 
-const ResultView = ({ data }: ResultViewProps) => {
-  const elements = data.map((result, index) => (
+const SingleResult = ({
+  result,
+  index,
+  data,
+  whatIf,
+}: {
+  result: Result;
+  index: number;
+  data: Array<Result>;
+  whatIf: (payload: { variable: string; date: string; value: string }) => Promise<void>;
+}) => {
+  const { isModalOpen, openModal, closeModal } = useModal();
+  const [date, setDate] = useState("");
+  const [value, setValue] = useState("");
+
+  return (
     <div
       key={result.name}
       style={{ marginBottom: 64, borderBottom: "1px solid rgba(0, 0, 0, 0.3)" }}
@@ -138,7 +160,67 @@ const ResultView = ({ data }: ResultViewProps) => {
           </ul>
         </Fragment>
       )}
+      <button
+        className="button button-outline"
+        style={{ display: "flex", alignItems: "center" }}
+        onClick={openModal}
+      >
+        <Info style={{ marginRight: 16 }} /> Let's see what happens if this changes!
+      </button>
+      <Modal
+        id="what-if"
+        content={
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+              <button className="button button-clear" onClick={closeModal}>
+                <X />
+              </button>
+            </div>
+            <label>
+              When - select a date of change
+              <input
+                value={date}
+                onChange={(e) => setDate(e.target.value)}
+                placeholder="22.06.2020"
+              ></input>
+            </label>
+            <label>
+              How - input a new data value
+              <input
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="143"
+              ></input>
+            </label>
+            <button
+              className="button button-clear"
+              onClick={() => {
+                whatIf({ variable: result.name, date, value }).then(() => {
+                  closeModal();
+                });
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        }
+        isOpen={isModalOpen}
+        transition={ModalTransition.BOTTOM_UP}
+      />
     </div>
+  );
+};
+
+const ResultView = ({ data, whatIf }: ResultViewProps) => {
+  const elements = data.map((result, index) => (
+    <SingleResult data={data} result={result} index={index} whatIf={whatIf} />
   ));
 
   return (

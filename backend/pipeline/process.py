@@ -41,8 +41,9 @@ def process_upload(uploaded_file, facebook_file=None):
 
 def process_question(variable, date, value, stored_data):
     '''Returns what would happen to the output of process_upload if `variable` were to achieve `value` at `date`'''
-    prediction_dict = {variable: stored_data['variable_data'][variable]['predictions'] for variable in stored_data['variable_data']}
-    color_dict = {variable: stored_data['variable_data'][variable]['colors'] for variable in stored_data['variable_data']}
+    variable_data = {entry['name']: entry for entry in stored_data['variable_data']}
+    prediction_dict = {variable: variable_data[variable]['predictions'] for entry in variable_data}
+    color_dict = {variable: variable_data[variable]['colors'] for variable in variable_data}
     last_known_date = stored_data['last_known_date']
     new_predictions = hypothetical(set_variable=variable, set_date=date, set_value=value, last_known_date=last_known_date, predictions=prediction_dict)
     new_plots = plot(new_predictions, color_dict)
@@ -50,12 +51,12 @@ def process_question(variable, date, value, stored_data):
         'last_known_date': last_known_date,
         'variable_data': [{
             'name': variable,
-            'source': stored_data['variable_data'][variable]['source'],
-            'colors': stored_data['variable_data'][variable]['colors'],
-            'dependencies': stored_data['variable_data'][variable]['dependencies'],
+            'source': variable_data[variable]['source'],
+            'colors': variable_data[variable]['colors'],
+            'dependencies': variable_data[variable]['dependencies'],
             'prediction': new_predictions[variable],
             'plot': new_plots[variable]
             }
-            for variable in stored_data['variable_data']
+            for variable in variable_data
         ]
     }

@@ -5,17 +5,17 @@ import pandas as pd
 
 def hypothetical(set_variable, set_date, set_value, last_known_date, predictions):
     '''Returns predictions in form of {variable: prediction}'''
-    set_change = set_value - predictions[set_variable][set_date].value
+    set_change = set_value - predictions[set_variable].loc[set_date].value
     new_predictions = {}
-    for variable in predictions.columns:
+    for variable in predictions:
         # TODO: might be a good idea to `continue` for set_variable?`
-        added_values = pd.Series(index=predictions.index, data=[np.nan] * len(predictions))
+        added_values = pd.Series(index=predictions[variable].index, data=[np.nan] * len(predictions[variable]))
         added_values[last_known_date] = 0
         added_values[set_date] = affected_change(set_change, predictions[set_variable], predictions[variable])
         added_values = nanless(added_values)
         new_predictions[variable] = pd.DataFrame.from_dict({
-            'date': predictions.index,
-            **{key: predictions[variable][key] + added_values for key in predictions.columns}
+            'date': predictions[variable].index,
+            **{key: predictions[variable][key] + added_values for key in predictions[variable].columns}
         }).set_index('date')
     return new_predictions
 

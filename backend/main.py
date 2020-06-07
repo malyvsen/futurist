@@ -23,10 +23,11 @@ def handle_upload():
 
 @app.route('/question', methods=['POST'])
 def handle_question():
+    print(request.json)
     token = request.json['token']
     variable = request.json['variable']
     date = request.json['date']
-    value = request.json['value']
+    value = float(request.json['value'])
     stored_data = sessions.retrieve(token)
     processed = pipeline.process_question(variable=variable, date=date, value=value, stored_data=stored_data)
     return jsonify({

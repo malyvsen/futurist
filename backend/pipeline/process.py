@@ -1,3 +1,4 @@
+import pandas as pd
 from .parse import parse, parse_facebook
 from .builtin_data import builtin_data
 from .join import join
@@ -42,7 +43,8 @@ def process_upload(uploaded_file, facebook_file=None):
 def process_question(variable, date, value, stored_data):
     '''Returns what would happen to the output of process_upload if `variable` were to achieve `value` at `date`'''
     variable_data = {entry['name']: entry for entry in stored_data['variable_data']}
-    prediction_dict = {variable: variable_data[variable]['predictions'] for entry in variable_data}
+    prediction_dict = {variable: variable_data[variable]['prediction'] for variable in variable_data}
+    date = nearest_date(prediction_dict[variable].index, pd.Timestamp(date).tz_localize(None))
     color_dict = {variable: variable_data[variable]['colors'] for variable in variable_data}
     last_known_date = stored_data['last_known_date']
     new_predictions = hypothetical(set_variable=variable, set_date=date, set_value=value, last_known_date=last_known_date, predictions=prediction_dict)
@@ -60,3 +62,7 @@ def process_question(variable, date, value, stored_data):
             for variable in variable_data
         ]
     }
+
+
+def nearest_date(items, pivot):
+    return min(items, key=lambda x: abs(x - pivot))

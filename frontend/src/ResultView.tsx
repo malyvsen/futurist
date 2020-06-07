@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import { ArrowUp, ArrowUpRight, ArrowDown, ArrowDownRight, ArrowRight } from "react-feather";
+import { ArrowUp, ArrowUpRight, ArrowDown, ArrowDownRight, ArrowRight, Tag } from "react-feather";
 
 import createPlotlyComponent from "react-plotly.js/factory";
 import { PlotParams } from "react-plotly.js";
@@ -14,6 +14,7 @@ interface Dependency {
 }
 
 interface Result {
+  source: string;
   name: string;
   colors: {
     opaque: string;
@@ -89,7 +90,7 @@ const ResultView = ({ data }: ResultViewProps) => {
       key={result.name}
       style={{ marginBottom: 64, borderBottom: "1px solid rgba(0, 0, 0, 0.3)" }}
     >
-      <h2>
+      <h2 style={{ display: "flex", justifyContent: "space-between" }}>
         <span
           style={{
             display: "inline-block",
@@ -100,6 +101,20 @@ const ResultView = ({ data }: ResultViewProps) => {
         >
           {result.name}
         </span>
+        {result.source !== "user" && (
+          <span
+            style={{
+              fontSize: "1em",
+              display: "inline-block",
+              borderRadius: 4,
+              padding: 4,
+              backgroundColor: result.source === "facebook" ? "#8b9dc3" : "#bed600",
+            }}
+          >
+            <Tag />
+            from {result.source.toUpperCase()}
+          </span>
+        )}
       </h2>
       {index === 0 && (
         <blockquote>

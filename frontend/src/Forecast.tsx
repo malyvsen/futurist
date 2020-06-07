@@ -92,10 +92,11 @@ const Forecast = () => {
     value: string;
   }) => {
     try {
+      const newDate = new Date(date).toISOString();
       const res = await fetch("/question", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token, variable, date, value }),
+        body: JSON.stringify({ token, variable, date: newDate, value }),
       });
       const json = await res.json();
       setResult({ token: json.token, data: json.data, error: null });

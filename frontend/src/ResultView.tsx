@@ -186,6 +186,7 @@ const SingleResult = ({
             <label>
               When - select a date of change
               <input
+                type="date"
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
                 placeholder="22.06.2020"

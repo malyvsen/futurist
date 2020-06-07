@@ -20,6 +20,7 @@
     "react-feather": "^2.0.8",
     "react-plotly.js": "^2.4.0",
     "react-scripts": "3.4.1",
+    "react-simple-hook-modal": "^0.2.0",
     "react-spring": "^8.0.27",
     "typescript": "~3.7.2",
     "wouter": "^2.4.0",

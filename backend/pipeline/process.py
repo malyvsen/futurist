@@ -16,7 +16,7 @@ def process_upload(uploaded_file, facebook_file=None):
     source_dict = {variable: 'user' for variable in uploaded_data.columns}
     if facebook_file is not None:
         facebook_data = parse_facebook(facebook_file.filename, facebook_file)
-        provided_data += facebook_data
+        provided_data += [facebook_data]
         source_dict.update({variable: 'facebook' for variable in facebook_data.columns})
     data = join(provided_data + builtin_data())
 

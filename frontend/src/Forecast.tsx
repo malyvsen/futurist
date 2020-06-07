@@ -11,6 +11,9 @@ import { useMachine } from "@xstate/react";
 import { Machine } from "xstate";
 import { theme } from "./theme";
 import { ResultView } from "./ResultView";
+import fbTopMenu from "./TopMenuFB.png";
+import fbInsights from "./InsightsPage.png";
+import fbFinalDialog from "./FinalDialog.png";
 
 const uploadMachine = Machine({
   id: "upload",
@@ -142,9 +145,52 @@ const Forecast = () => {
               <Modal
                 id="fb-guide"
                 content={
-                  <button onClick={closeModal}>
-                    <X />
-                  </button>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <div style={{ width: "100%", display: "flex", justifyContent: "flex-end" }}>
+                      <button className="button button-clear" onClick={closeModal}>
+                        <X />
+                      </button>
+                    </div>
+                    <h1> How do I do this?</h1>
+                    <p style={{ width: "100%" }}>
+                      Don't worry, we've got you covered! Head over to your Facebook page and click
+                      on the <span style={{ fontWeight: "bold" }}>Insights</span> tab:
+                    </p>
+                    <img
+                      style={{ marginBottom: 16 }}
+                      src={fbTopMenu}
+                      alt="facebook page top menu"
+                    />
+                    <p style={{ width: "100%" }}>
+                      You should see a button which says Export Data in the top right:
+                    </p>
+                    <img
+                      style={{ marginBottom: 16 }}
+                      src={fbInsights}
+                      alt="facebook page insights section"
+                    />
+                    <p style={{ width: "100%" }}>
+                      On the dialog that appears, select <code>.xls</code> as the file format and a
+                      date range that matches the date range of the rest of your data. You don't
+                      need to change the other settings, just click Export Data - after a few
+                      seconds you'll get a file that you can upload to Futurist.
+                    </p>
+                    <img
+                      style={{ marginBottom: 16 }}
+                      src={fbFinalDialog}
+                      alt="facebook page export data dialog"
+                    />
+                    <p style={{ width: "100%" }}>
+                      That's it! You can send your data to Futurist now.
+                    </p>
+                  </div>
                 }
                 isOpen={isModalOpen}
                 transition={ModalTransition.BOTTOM_UP}

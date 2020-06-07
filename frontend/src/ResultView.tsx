@@ -123,7 +123,7 @@ const ResultView = ({ data }: ResultViewProps) => {
         </blockquote>
       )}
       <Plot {...result.plot} />
-      {(result.dependencies.length > 0 || result.source === "gus") && (
+      {result.dependencies.length > 0 && result.source !== "gus" && (
         <Fragment>
           <h3>Dependencies:</h3>
           <ul>

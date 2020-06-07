@@ -32,7 +32,7 @@ const uploadMachine = Machine({
       on: { SUCCESS: "display", ERROR: "error" },
     },
     display: {
-      on: { RETRY: "inactive" },
+      on: { RETRY: "inactive", ERROR: "error" },
     },
     error: {
       on: { RETRY: "inactive" },
@@ -56,12 +56,13 @@ const Forecast = () => {
     onDrop: () => send("FB_SELECT"),
   });
 
-  const [result, setResult] = useState<{ data: any; error: Error | null }>({
+  const [result, setResult] = useState<{ data: any; error: Error | null; token: string | null }>({
     data: null,
     error: null,
+    token: null,
   });
 
-  const { data } = result;
+  const { data, token } = result;
 
   const sendFile = (file: File, fbFile: File) => {
     let data = new FormData();
@@ -72,13 +73,36 @@ const Forecast = () => {
     fetch("/upload", { method: "POST", body: data })
       .then((res) => res.json())
       .then((json) => {
-        setResult({ data: json, error: null });
+        setResult({ token: json.token, data: json.data, error: null });
         send("SUCCESS");
       })
       .catch((error) => {
         send("ERROR");
-        setResult({ data: null, error });
+        setResult({ token: null, data: null, error });
       });
+  };
+
+  const whatIf = async ({
+    variable,
+    date,
+    value,
+  }: {
+    variable: string;
+    date: string;
+    value: string;
+  }) => {
+    try {
+      const res = await fetch("/question", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ token, variable, date, value }),
+      });
+      const json = await res.json();
+      setResult({ token: json.token, data: json.data, error: null });
+    } catch (error) {
+      send("ERROR");
+      setResult({ token: null, data: null, error });
+    }
   };
 
   return (
@@ -93,7 +117,7 @@ const Forecast = () => {
         justifyContent: "center",
       }}
     >
-      {state.value === "display" && <ResultView data={data} />}
+      {state.value === "display" && <ResultView whatIf={whatIf} data={data} />}
       {state.value === "inactive" && (
         <Fragment>
           <div

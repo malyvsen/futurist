@@ -108,17 +108,21 @@ const ResultView = ({ data }: ResultViewProps) => {
         </blockquote>
       )}
       <Plot {...result.plot} />
-      <h3>Dependencies:</h3>
-      <ul>
-        {result.dependencies.map((dep) => (
-          <DependencyItem
-            name='""'
-            data={data}
-            dependsOn={dep.name}
-            correlation={dep.correlation}
-          />
-        ))}
-      </ul>
+      {result.dependencies.length > 0 && (
+        <Fragment>
+          <h3>Dependencies:</h3>
+          <ul>
+            {result.dependencies.map((dep) => (
+              <DependencyItem
+                name='""'
+                data={data}
+                dependsOn={dep.name}
+                correlation={dep.correlation}
+              />
+            ))}
+          </ul>
+        </Fragment>
+      )}
     </div>
   ));
 

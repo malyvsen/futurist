@@ -10,10 +10,12 @@ import {
   Info,
   X,
 } from "react-feather";
+import { format } from "date-fns";
 
 import createPlotlyComponent from "react-plotly.js/factory";
 import { PlotParams } from "react-plotly.js";
-import { find } from "lodash";
+import { find, findIndex } from "lodash";
+import { LoadingActivity } from "./LoadingActivity";
 
 const Plotly = require("plotly.js-basic-dist");
 const Plot = createPlotlyComponent(Plotly);
@@ -104,8 +106,15 @@ const SingleResult = ({
   whatIf: (payload: { variable: string; date: string; value: string }) => Promise<void>;
 }) => {
   const { isModalOpen, openModal, closeModal } = useModal();
-  const [date, setDate] = useState("");
-  const [value, setValue] = useState("");
+  const nonNullIndex = findIndex(result.plot.data[2].x as any, (o: any) => o);
+  console.log(nonNullIndex);
+  console.log(result.plot!.data[2]!.x![nonNullIndex]);
+  const [date, setDate] = useState<any>(
+    format(new Date(result.plot!.data[2]!.x![nonNullIndex] as any), "yyyy-MM-dd")
+  );
+  console.log(date);
+  const [value, setValue] = useState<any>(result.plot!.data[2]!.y![nonNullIndex]);
+  const [loading, setLoading] = useState(false);
 
   return (
     <div
@@ -200,16 +209,23 @@ const SingleResult = ({
                 placeholder="143"
               ></input>
             </label>
-            <button
-              className="button button-clear"
-              onClick={() => {
-                whatIf({ variable: result.name, date, value }).then(() => {
-                  closeModal();
-                });
-              }}
-            >
-              Submit
-            </button>
+            {loading ? (
+              <LoadingActivity />
+            ) : (
+              <button
+                className="button button-clear"
+                onClick={() => {
+                  setLoading(true);
+                  whatIf({ variable: result.name, date, value })
+                    .then(() => {
+                      closeModal();
+                    })
+                    .finally(() => setLoading(false));
+                }}
+              >
+                Submit
+              </button>
+            )}
           </div>
         }
         isOpen={isModalOpen}
@@ -221,7 +237,7 @@ const SingleResult = ({
 
 const ResultView = ({ data, whatIf }: ResultViewProps) => {
   const elements = data.map((result, index) => (
-    <SingleResult data={data} result={result} index={index} whatIf={whatIf} />
+    <SingleResult key={index} data={data} result={result} index={index} whatIf={whatIf} />
   ));
 
   return (

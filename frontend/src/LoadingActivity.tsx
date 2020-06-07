@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { animated, useSpring } from "react-spring";
+import { theme } from "./theme";
 
-const LoadingActivity = ({ pulseColor }: { pulseColor: string }) => {
+const LoadingActivity = ({ pulseColor = theme.primary }: { pulseColor?: string }) => {
   const points = [
     [22, 12],
     [18, 12],

@@ -6,7 +6,7 @@ import numpy.ma as ma
 def dependencies(data):
     '''Returns dict like {afftected_variable: [{name: affecting_variable, correlation: 0.7}, ...]}'''
     period = int(np.clip(len(data) * 0.25, 1, 32))
-    moving_averages = data.rolling(window=period).mean()
+    moving_averages = data.interpolate().rolling(window=period).mean()
     unfiltered = {
         affected: [{
                 'name': affecting,

@@ -1,7 +1,10 @@
-import React from "react";
+import "react-simple-hook-modal/dist/styles.css";
 
+import React, { Fragment } from "react";
+
+import { Modal, useModal, ModalTransition } from "react-simple-hook-modal";
 import { LoadingActivity } from "./LoadingActivity";
-import { Sunrise, FileText, UploadCloud, Trash } from "react-feather";
+import { Sunrise, FileText, UploadCloud, Trash, Info, X } from "react-feather";
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
 import { useMachine } from "@xstate/react";
@@ -20,7 +23,7 @@ const uploadMachine = Machine({
       on: { UPLOAD: "uploading", RETRY: "inactive", FB_SELECT: "readyAndFbSelected" },
     },
     readyAndFbSelected: {
-      on: { UPLOAD: "uploading" },
+      on: { UPLOAD: "uploading", RETRY: "inactive" },
     },
     uploading: {
       on: { SUCCESS: "display", ERROR: "error" },
@@ -36,6 +39,7 @@ const uploadMachine = Machine({
 
 const Forecast = () => {
   const [state, send] = useMachine(uploadMachine);
+  const { isModalOpen, openModal, closeModal } = useModal();
 
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop: () => send("SELECT"),
@@ -102,21 +106,7 @@ const Forecast = () => {
           <p>Drag 'n' drop your Excel file here (or click to browse)</p>
         </div>
       )}
-      {(state.value === "ready" || state.value === "readyAndFbSelected") && (
-        <aside
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <h4 style={{ margin: 16 }}>You've uploaded:</h4>
-          <FileText size={32} style={{ margin: 8 }} />
-          <p style={{ margin: 16 }}>{acceptedFiles[0].name}</p>
-        </aside>
-      )}
-      {state.value === "ready" && (
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", marginBottom: 32 }}>
         <div
           style={{
             display: "flex",
@@ -124,29 +114,75 @@ const Forecast = () => {
             alignItems: "center",
             justifyContent: "center",
           }}
-          {...fbGetRootProps({ className: "dropzone" })}
         >
-          <UploadCloud style={{ margin: 16 }} size={48} />
-          <input {...fbGetInputProps()} />
-          <p>Drag 'n' drop your Facebook stats file (or click to browse)</p>
+          {state.value === "ready" && (
+            <Fragment>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                {...fbGetRootProps({ className: "dropzone" })}
+              >
+                <UploadCloud style={{ margin: 16 }} size={48} />
+                <input {...fbGetInputProps()} />
+                <p style={{ fontSize: "0.8em" }}>
+                  Drag 'n' drop your Facebook stats file (or click to browse)
+                </p>
+              </div>
+              <button
+                className="button button-outline"
+                style={{ display: "flex", alignItems: "center" }}
+                onClick={openModal}
+              >
+                <Info style={{ marginRight: 16 }} /> Where can I get this?
+              </button>
+              <Modal
+                id="fb-guide"
+                content={
+                  <button onClick={closeModal}>
+                    <X />
+                  </button>
+                }
+                isOpen={isModalOpen}
+                transition={ModalTransition.BOTTOM_UP}
+              />
+            </Fragment>
+          )}
+          {state.value === "readyAndFbSelected" && (
+            <aside
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h4 style={{ margin: 16 }}>You've uploaded your Facebook stats file</h4>
+              <FileText size={32} style={{ margin: 8 }} />
+              <p style={{ margin: 16 }}>{fbAcceptedFiles[0].name}</p>
+            </aside>
+          )}
         </div>
-      )}
-      {state.value === "readyAndFbSelected" && (
-        <aside
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <h4 style={{ margin: 16 }}>You've uploaded your Facebook stats file</h4>
-          <FileText size={32} style={{ margin: 8 }} />
-          <p style={{ margin: 16 }}>{fbAcceptedFiles[0].name}</p>
-        </aside>
-      )}
-
-      {state.value === "uploading" && <LoadingActivity pulseColor={theme.primary} />}
+        <div>
+          {(state.value === "ready" || state.value === "readyAndFbSelected") && (
+            <aside
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <h4 style={{ margin: 16 }}>You've uploaded:</h4>
+              <FileText size={32} style={{ margin: 8 }} />
+              <p style={{ margin: 16 }}>{acceptedFiles[0].name}</p>
+            </aside>
+          )}
+        </div>
+      </div>
       {(state.value === "ready" || state.value === "readyAndFbSelected") && (
         <div style={{ display: "flex" }}>
           <button
@@ -166,6 +202,7 @@ const Forecast = () => {
           </button>
         </div>
       )}
+      {state.value === "uploading" && <LoadingActivity pulseColor={theme.primary} />}
       {state.value === "display" && (
         <button onClick={() => send("RETRY")}>send another file?</button>
       )}

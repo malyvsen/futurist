@@ -17,7 +17,10 @@ const uploadMachine = Machine({
       on: { SELECT: "ready" },
     },
     ready: {
-      on: { UPLOAD: "uploading", RETRY: "inactive" },
+      on: { UPLOAD: "uploading", RETRY: "inactive", FB_SELECT: "readyAndFbSelected" },
+    },
+    readyAndFbSelected: {
+      on: { UPLOAD: "uploading" },
     },
     uploading: {
       on: { SUCCESS: "display", ERROR: "error" },
@@ -38,6 +41,14 @@ const Forecast = () => {
     onDrop: () => send("SELECT"),
   });
 
+  const {
+    acceptedFiles: fbAcceptedFiles,
+    getRootProps: fbGetRootProps,
+    getInputProps: fbGetInputProps,
+  } = useDropzone({
+    onDrop: () => send("FB_SELECT"),
+  });
+
   const [result, setResult] = useState<{ data: any; error: Error | null }>({
     data: null,
     error: null,
@@ -45,9 +56,10 @@ const Forecast = () => {
 
   const { data } = result;
 
-  const sendFile = (file: File) => {
+  const sendFile = (file: File, fbFile: File) => {
     let data = new FormData();
     data.append("data_file", file);
+    data.append("facebook_file", fbFile);
 
     send("UPLOAD");
     fetch("/upload", { method: "POST", body: data })
@@ -90,7 +102,7 @@ const Forecast = () => {
           <p>Drag 'n' drop your Excel file here (or click to browse)</p>
         </div>
       )}
-      {state.value === "ready" && (
+      {(state.value === "ready" || state.value === "readyAndFbSelected") && (
         <aside
           style={{
             display: "flex",
@@ -104,9 +116,38 @@ const Forecast = () => {
           <p style={{ margin: 16 }}>{acceptedFiles[0].name}</p>
         </aside>
       )}
+      {state.value === "ready" && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          {...fbGetRootProps({ className: "dropzone" })}
+        >
+          <UploadCloud style={{ margin: 16 }} size={48} />
+          <input {...fbGetInputProps()} />
+          <p>Drag 'n' drop your Facebook stats file (or click to browse)</p>
+        </div>
+      )}
+      {state.value === "readyAndFbSelected" && (
+        <aside
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <h4 style={{ margin: 16 }}>You've uploaded your Facebook stats file</h4>
+          <FileText size={32} style={{ margin: 8 }} />
+          <p style={{ margin: 16 }}>{fbAcceptedFiles[0].name}</p>
+        </aside>
+      )}
 
       {state.value === "uploading" && <LoadingActivity pulseColor={theme.primary} />}
-      {state.value === "ready" && (
+      {(state.value === "ready" || state.value === "readyAndFbSelected") && (
         <div style={{ display: "flex" }}>
           <button
             style={{ marginRight: 16, display: "flex", alignItems: "center" }}
@@ -118,7 +159,7 @@ const Forecast = () => {
           </button>
           <button
             style={{ display: "flex", alignItems: "center" }}
-            onClick={() => sendFile(acceptedFiles[0])}
+            onClick={() => sendFile(acceptedFiles[0], fbAcceptedFiles[0])}
           >
             <Sunrise style={{ marginRight: 8 }} />
             let's forecast

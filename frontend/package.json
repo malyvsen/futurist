@@ -13,7 +13,7 @@
     "@xstate/react": "^0.8.1",
     "date-fns": "^2.14.0",
     "feather-icons": "^4.28.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "plotly.js-basic-dist": "^1.54.1",
     "react": "16.9.0",
     "react-dom": "16.9.0",
